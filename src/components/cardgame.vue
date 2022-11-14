@@ -11,6 +11,7 @@
         <h1 v-if="Push" class="result">Push</h1>
         <h1 v-if="Lose" class="result">haha You are Loser</h1>
         <div class="cardvaluesymbol">
+            <div class="middle">
             <div v-if="cardOpen" class="firstcard">
             <h2>{{computerRendom}}</h2>
             <h2 
@@ -20,6 +21,7 @@
             {{computerRendomSymbols}}
         </h2>
         </div>
+        <h1 class="computerscore" v-if="computerScoreOpen">{{computerScore}}</h1>
         <div v-if="cardOpen" class="secondcard">
             <h2>{{computerRendomSec}}</h2>
             <h2 
@@ -29,6 +31,7 @@
             {{computerRendomSymbolsec}}
         </h2>
         </div>
+    </div>
         </div>
     </div>
 </div>
@@ -45,6 +48,7 @@
     </div>
     <h1 v-if="isClose" class="bet">{{bet}}</h1>
         <div class="cardvaluesymbol">
+            <div class="middle">
             <div v-if="cardOpen" class="firstcard">
             <h2>{{rendomi}}</h2>
             <h2 
@@ -54,6 +58,7 @@
             {{rendomisymbols}}
         </h2>
         </div>
+        <h1 class="computerscore" v-if="playerScoreOpen">{{playerScore}}</h1>
         <div v-if="cardOpen" class="secondcard">
             <h2>{{rendomiSec}}</h2>
             <h2 
@@ -63,6 +68,7 @@
             {{rendomisymbolSec}}
         </h2>
         </div>
+    </div>
         </div>
     </div>
 </div>
@@ -105,7 +111,11 @@ export default {
             computerRendom: "",
             computerRendomSymbols: "",
             computerRendomSymbolsec: "",
-            computerRendomSec: ""
+            computerRendomSec: "",
+            computerScore: "",
+            computerScoreOpen: false,
+            playerScore: "",
+            playerScoreOpen: false
         }
     },
     methods: {
@@ -120,6 +130,10 @@ export default {
              this.computerRendomSymbolsec = this.cardSymbols[Math.floor(Math.random() * this.cardSymbols.length)]
             this.cardOpen = true
             this.isClose = false
+            this.computerScore = this.computerRendom + this.computerRendomSec
+            this.playerScore = this.rendomi + this.rendomiSec
+            this.playerScoreOpen = true
+            this.computerScoreOpen = true
             if(this.rendomi + this.rendomiSec > this.computerRendom + this.computerRendomSec){
                 setTimeout(() => {
                     // alert("You are Winner")
@@ -129,10 +143,12 @@ export default {
                     this.dealnowDisabled = true
                     this.balance += 50
                     this.Congrats = true
+                    this.computerScoreOpen = false
+                    this.playerScoreOpen = false
                     if(this.balance > 1000){
                            this.balance = 1000
                         }
-                }, 3000);
+                }, 5000);
             }else if(this.rendomi + this.rendomiSec === this.computerRendom + this.computerRendomSec){
                 setTimeout(() => {
                     // alert("Push")
@@ -142,10 +158,13 @@ export default {
                     this.dealnowDisabled = true
                     this.balance += this.bet
                     this.Push = true
+                    this.computerScoreOpen = true
+                    this.computerScoreOpen = false
+                    this.playerScoreOpen = false
                     if(this.balance > 1000){
                            this.balance = 1000
                         }
-                }, 3000);
+                }, 5000);
             }else{
                 setTimeout(() => {
                     // alert("You are Loser")
@@ -154,10 +173,13 @@ export default {
                     this.bet = 0
                     this.dealnowDisabled = true
                     this.Lose = true
+                    this.computerScoreOpen = true
+                    this.computerScoreOpen = false
+                    this.playerScoreOpen = false
                      if(this.balance > 1000){
                            this.balance = 1000
                         }
-                }, 3000);
+                }, 5000);
             }
             console.log(this.rendomi + this.rendomiSec);
         },
@@ -166,8 +188,9 @@ export default {
                 this.balance++
                 this.bet--
             }
-            if(this.balance === 1000){
+            if(this.bet <= 0){
                 this.dealnowDisabled = true
+                this.bet = 0
             }
         },
         plus(){
@@ -245,6 +268,15 @@ main {
 }
 
 .cardvaluesymbol {
+    /* display: flex;   
+    justify-content: space-between;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%); */
+}
+
+.middle {
     display: flex;   
     justify-content: space-between;
     position: absolute;
@@ -391,6 +423,21 @@ h2 {
     font-size: 20px;
 }
 
+.computerscore {
+    margin-top: -40px;
+    color: #FFFFFF;
+    animation: changecolor 2s ;
+    font-size: 20px;
+}
 
+
+@keyframes changecolor {
+    50% {
+        color: red
+    }
+    90% {
+       color: #FFFFFF
+    }
+}
 
 </style>
